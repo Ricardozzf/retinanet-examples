@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <cstdint>
 
+#include <thrust/device_ptr.h>
 #include <thrust/sequence.h>
 #include <thrust/execution_policy.h>
 #include <thrust/gather.h>
@@ -79,7 +80,7 @@ int decode(int batch_size,
 
   for (int batch = 0; batch < batch_size; batch++) {
     auto in_scores = static_cast<const float *>(inputs[0]) + batch * scores_size;
-    auto in_boxes = static_cast<const float *>(inputs[1]) + batch * scores_size * 4 / num_classes;
+    auto in_boxes = static_cast<const float *>(inputs[1]) + batch * (scores_size / num_classes) * 4;
 
     auto out_scores = static_cast<float *>(outputs[0]) + batch * top_n;
     auto out_boxes = static_cast<float4 *>(outputs[1]) + batch * top_n;
